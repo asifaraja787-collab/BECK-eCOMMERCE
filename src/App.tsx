@@ -1,21 +1,63 @@
-import { Button } from "@/components/ui/button"
+// import { BrowserRouter, Routes, Route } from "react-router-dom";
+// import Navbar from "./components/Navbar";
 
-export function App() {
+// // Pages
+// import Home from "./pages/Home";
+// import Shop from "./pages/Shop";
+// import Blog from "./pages/Blog";
+// import Contact from "./pages/Contact";
+// import Cart from "./pages/Cart";
+// import { Toaster } from "./components/ui/toaster";
+
+
+// function App() {
+//   return (
+//     <BrowserRouter>
+//       <Navbar />
+
+//       <Routes>
+//         <Route path="/" element={<Home />} />
+//         <Route path="/shop" element={<Shop />} />
+//         <Route path="/blog" element={<Blog />} />
+//         <Route path="/contact" element={<Contact />} />
+//         <Route path="/cart" element={<Cart />} />
+//       </Routes>
+//       <Toaster />
+//     </BrowserRouter>
+    
+//   );
+// }
+
+// export default App;
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Navbar from "./components/Navbar";
+
+import Home from "./pages/Home";
+import Shop from "./pages/Shop";
+import Blog from "./pages/Blog";
+import Contact from "./pages/Contact";
+import Cart from "./pages/Cart";
+
+
+
+function App() {
   return (
-    <div className="flex min-h-svh p-6">
-      <div className="flex max-w-md min-w-0 flex-col gap-4 text-sm leading-loose">
-        <div>
-          <h1 className="font-medium">Project ready!</h1>
-          <p>You may now add components and start building.</p>
-          <p>We&apos;ve already added the button component for you.</p>
-          <Button className="mt-2">Button</Button>
-        </div>
-        <div className="font-mono text-xs text-muted-foreground">
-          (Press <kbd>d</kbd> to toggle dark mode)
-        </div>
-      </div>
-    </div>
-  )
+    
+      <BrowserRouter>
+        <Navbar />
+
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/shop" element={<Shop />} />
+          <Route path="/blog" element={<Blog />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/cart" element={<Cart />} />
+        </Routes>
+
+       
+      </BrowserRouter>
+
+  );
 }
 
-export default App
+export default App;
