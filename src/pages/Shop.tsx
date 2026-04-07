@@ -1,130 +1,130 @@
-
 import { useState } from "react";
-import { useCart } from "../context/CartContext";
-import { Dialog } from "../components/ui/dialog";
-import { toast } from "sonner"
+import { useCart } from "@/context/useCart";
+import { toast } from "sonner";
 
-export default function Cart() {
-  const { cart, increaseQty, decreaseQty, removeItem } = useCart();
-  const [open, setOpen] = useState(false);
+// IMAGES
+const sofa = new URL("../assets/fsofa.png", import.meta.url).href;
+const chair = new URL("../assets/wooden chair.png", import.meta.url).href;
+const table = new URL("../assets/modrentable.png", import.meta.url).href;
+const office = new URL("../assets/office furniture.png", import.meta.url).href;
+const school = new URL("../assets/school furniture.png", import.meta.url).href;
 
-  const total = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
+// ✅ Product type matches CartContext
+type ProductType = {
+  id: number;
+  name: string;
+  price: number;
+  img: string;
+  category: string;
+};
 
-  const handleRemove = (id: number) => {
-    removeItem(id);
-    toast("Item removed from cart", {
-      description: "The item has been removed from your cart.",
+export default function Shop() {
+  const { addToCart } = useCart();
+  const [search, setSearch] = useState("");
+  const [category, setCategory] = useState("All");
+  const [sort, setSort] = useState("");
+
+  const products: ProductType[] = [
+    { id: 1, name: "Sofa", price: 500, category: "Home", img: sofa },
+    { id: 2, name: "Chair", price: 150, category: "Home", img: chair },
+    { id: 3, name: "Table", price: 200, category: "Home", img: table },
+    { id: 4, name: "Office Furniture", price: 300, category: "Office", img: office },
+    { id: 5, name: "School Furniture", price: 180, category: "School", img: school },
+  ];
+
+  const filtered = products
+    .filter(
+      (p) =>
+        p.name.toLowerCase().includes(search.toLowerCase()) &&
+        (category === "All" || p.category === category)
+    )
+    .sort((a, b) => {
+      if (sort === "low") return a.price - b.price;
+      if (sort === "high") return b.price - a.price;
+      return 0;
+    });
+
+  const handleAdd = (item: ProductType) => {
+    addToCart(item);
+    toast.success(`${item.name} added to cart`, {
+      style: { background: "#111", color: "#fff", border: "1px solid #22c55e", padding: "12px" },
     });
   };
 
   return (
-    <div className="flex flex-col min-h-screen">
-      <div className="p-10 flex-1">
-        <h1 className="text-3xl font-bold mb-6">Your Cart</h1>
+    <div className="flex flex-col min-h-screen bg-gray-50 overflow-x-hidden">
+      {/* MAIN */}
+      <div className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 md:px-10 py-10">
+        <h1 className="text-3xl sm:text-4xl font-bold text-center mb-10">Shop Furniture</h1>
 
-        {cart.length === 0 ? (
-          <p className="text-gray-500">No items in cart</p>
+        {/* FILTER BAR */}
+        <div className="bg-white p-4 sm:p-6 rounded-xl shadow mb-8 flex flex-col lg:flex-row gap-4 items-center justify-between">
+          <input
+            type="text"
+            placeholder="Search furniture..."
+            className="border p-3 rounded w-full lg:w-1/2 focus:outline-none focus:ring-2 focus:ring-black"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+          <select className="border p-3 rounded w-full lg:w-60 focus:outline-none" onChange={(e) => setSort(e.target.value)}>
+            <option value="">Sort By</option>
+            <option value="low">Price Low → High</option>
+            <option value="high">Price High → Low</option>
+          </select>
+        </div>
+
+        {/* CATEGORY */}
+        <div className="flex flex-wrap gap-3 justify-center mb-10">
+          {["All", "Home", "Office", "School"].map((cat) => (
+            <button
+              key={cat}
+              onClick={() => setCategory(cat)}
+              className={`px-4 py-2 rounded-full text-sm sm:text-base transition ${
+                category === cat ? "bg-black text-white shadow" : "bg-gray-200 hover:bg-gray-300"
+              }`}
+            >
+              {cat}
+            </button>
+          ))}
+        </div>
+
+        {/* PRODUCTS */}
+        {filtered.length === 0 ? (
+          <p className="text-center text-gray-500 text-lg">No products found 😢</p>
         ) : (
-          <div className="space-y-4">
-            {cart.map((item) => (
-              <div
-                key={item.id}
-                className="flex justify-between items-center border p-4 rounded"
-              >
-                {/* PRODUCT INFO */}
-                <div>
-                  <p className="font-semibold">{item.name}</p>
-                  <p>${item.price}</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            {filtered.map((item) => (
+              <div key={item.id} className="bg-white p-5 rounded-2xl shadow hover:shadow-xl transition duration-300 group">
+                <div className="overflow-hidden rounded-lg">
+                  <img src={item.img} className="h-48 w-full object-cover group-hover:scale-110 transition duration-300" alt={item.name} />
                 </div>
-
-                {/* QUANTITY */}
-                <div className="flex items-center gap-3">
+                <div className="mt-4 text-center">
+                  <h3 className="font-semibold text-lg">{item.name}</h3>
+                  <p className="text-gray-500">${item.price}</p>
                   <button
-                    onClick={() => decreaseQty(item.id)}
-                    className="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300 transition"
+                    onClick={() => handleAdd(item)}
+                    className="mt-4 w-full bg-black text-white py-2 rounded-lg hover:bg-gray-800 transition"
                   >
-                    -
-                  </button>
-                  <span>{item.quantity}</span>
-                  <button
-                    onClick={() => increaseQty(item.id)}
-                    className="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300 transition"
-                  >
-                    +
+                    Add to Cart
                   </button>
                 </div>
-
-                {/* REMOVE BUTTON */}
-                <button
-                  onClick={() => handleRemove(item.id)}
-                  className="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700 transition"
-                >
-                  Remove
-                </button>
-
-                {/* TOTAL PRICE */}
-                <p className="font-bold">${item.price * item.quantity}</p>
               </div>
             ))}
           </div>
         )}
-
-        <h2 className="mt-6 text-xl font-bold">Total: ${total}</h2>
-
-        {/* CHECKOUT BUTTON */}
-        <button
-          onClick={() => setOpen(true)}
-          disabled={cart.length === 0}
-          className="mt-4 bg-green-600 text-white px-6 py-2 rounded disabled:bg-gray-400"
-        >
-          Checkout
-        </button>
-
-        {/* DIALOG */}
-        <Dialog open={open} onClose={() => setOpen(false)}>
-          <h2 className="text-xl font-bold mb-4">Checkout</h2>
-
-          <input placeholder="Full Name" className="w-full border p-2 mb-2" />
-          <input placeholder="Address" className="w-full border p-2 mb-2" />
-          <input
-            type="text"
-            placeholder="0123456789"
-            className="w-full border p-2 mb-4"
-          />
-
-          <button
-            onClick={() => {
-              toast("Payment successful!", {
-                description: "Thank you for your purchase!",
-              });
-              setOpen(false);
-            }}
-            className="w-full bg-black text-white py-2 rounded"
-          >
-            Confirm Payment
-          </button>
-        </Dialog>
       </div>
 
       {/* FOOTER */}
-      <footer className="bg-black text-white p-6 mt-auto">
-        <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center text-sm md:text-base gap-4 md:gap-0">
-          <div>© 2026 BECK Furniture. All rights reserved.</div>
-          <div className="flex flex-wrap gap-4">
-            <a href="/" className="hover:underline">
-              Home
-            </a>
-            <a href="/shop" className="hover:underline">
-              Shop
-            </a>
-            <a href="/blog" className="hover:underline">
-              Blog
-            </a>
-            <a href="/contact" className="hover:underline">
-              Contact
-            </a>
+      <footer className="bg-black text-white py-6">
+        <div className="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-4 text-sm sm:text-base">
+          <div>© 2026 BECK Furniture</div>
+          <div className="flex gap-4">
+            <a href="/">Home</a>
+            <a href="/shop">Shop</a>
+            <a href="/blog">Blog</a>
+            <a href="/contact">Contact</a>
           </div>
-          <div>Email: support@beck.com | Phone: +92 300 0000000</div>
+          <div>support@beck.com</div>
         </div>
       </footer>
     </div>

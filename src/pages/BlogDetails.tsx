@@ -1,39 +1,79 @@
-import { useParams } from "react-router-dom";
-// import { useNavigate } from "react-router-dom";
-const blogs = [
+import { useParams, useNavigate } from "react-router-dom";
+const blog1 = new URL("../assets/blog1.png", import.meta.url).href;
+const blog2 = new URL("../assets/blog2.png", import.meta.url).href;
+const blog3 = new URL("../assets/blog3.png", import.meta.url).href;
+type BlogType = {
+  id: number;
+  title: string;
+  content: string;
+  image: string;
+};
+
+const blogs: BlogType[] = [
   {
-    id: "1",
-    title: "Top 10 Furniture Trends",
+    id: 1,
+    title: "Modern Living Room Ideas",
     content:
-      "Full article: Modern furniture is evolving with minimalism, eco-friendly materials, and smart designs. Neutral tones and multifunctional furniture are trending in 2026...",
+      "Modern living rooms emphasize simplicity and comfort. Use neutral tones, smart furniture, and proper lighting to create a relaxing environment...",
+    image: blog1,
   },
   {
-    id: "2",
-    title: "How to Choose the Perfect Sofa",
+    id: 2,
+    title: "Choosing the Perfect Sofa",
     content:
-      "Full article: Choosing a sofa depends on size, comfort, fabric, and durability. Always measure your space and pick a color that matches your room theme...",
+      "A perfect sofa depends on size, material, and comfort. Always consider durability and how it fits your living space...",
+    image: blog2,
   },
   {
-    id: "3",
-    title: "Wooden vs Modern Furniture",
+    id: 3,
+    title: "Office Furniture Trends",
     content:
-      "Full article: Wooden furniture offers durability and a classic look, while modern furniture focuses on sleek design and lightweight materials...",
+      "Office furniture now focuses on ergonomics and productivity. Adjustable desks and supportive chairs are essential...",
+    image: blog3,
   },
 ];
 
 export default function BlogDetails() {
   const { id } = useParams();
+  const navigate = useNavigate();
 
-  const blog = blogs.find((b) => b.id === id);
+  const blog = blogs.find((b) => b.id === Number(id));
 
   if (!blog) {
-    return <h1 className="p-6">Blog not found</h1>;
+    return (
+      <div className="p-10 text-center">
+        <h1>Blog not found</h1>
+        <button
+          onClick={() => navigate("/blog")}
+          className="text-blue-600 mt-4"
+        >
+          Go Back
+        </button>
+      </div>
+    );
   }
 
   return (
-    <div className="p-10 max-w-3xl mx-auto">
-      <h1 className="text-3xl font-bold mb-4">{blog.title}</h1>
-      <p className="text-gray-600 leading-relaxed">{blog.content}</p>
+    <div className="flex flex-col min-h-screen">
+
+      <main className="flex-1 max-w-3xl mx-auto p-6">
+        <img
+          src={blog.image}
+          className="w-full h-64 object-cover rounded mb-4"
+        />
+
+        <h1 className="text-3xl font-bold mb-4">
+          {blog.title}
+        </h1>
+
+        <p className="text-gray-600 leading-relaxed">
+          {blog.content}
+        </p>
+      </main>
+
+      <footer className="bg-black text-white p-6 text-center">
+        © 2026 BECK Furniture
+      </footer>
     </div>
   );
 }
