@@ -95,8 +95,8 @@ export default function Shop() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {filtered.map((item) => (
               <div key={item.id} className="bg-white p-5 rounded-2xl shadow hover:shadow-xl transition duration-300 group">
-                <div className="overflow-hidden rounded-lg">
-                  <img src={item.img} className="h-48 w-full object-cover group-hover:scale-110 transition duration-300" alt={item.name} />
+                <div className="overflow-hidden rounded-lg ">
+                  <img src={item.img} className="h-48 w-full object-contain group-hover:scale-110 transition duration-300" alt={item.name} />
                 </div>
                 <div className="mt-4 text-center">
                   <h3 className="font-semibold text-lg">{item.name}</h3>

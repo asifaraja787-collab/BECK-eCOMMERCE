@@ -1,9 +1,10 @@
-import { useCart } from "../context/CartContext";
+import { useCart } from "../context/useCart";
 
 type Product = {
   id: number;
   name: string;
   price: number;
+  img: string;
 };
 
 export default function ProductCard({ product }: { product: Product }) {

@@ -45,7 +45,7 @@ export default function BlogDetails() {
         <h1>Blog not found</h1>
         <button
           onClick={() => navigate("/blog")}
-          className="text-blue-600 mt-4"
+          className="text-blue-600 mt-4 cursor-pointer"
         >
           Go Back
         </button>
